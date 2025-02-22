@@ -1,22 +1,34 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 import Header from './components/Header/Header';
-import Main from './components/Main/Main';
-
+import Product from './components/Product/Product';
+import { BrowserRouter, Routes, Route } from "react-router"
+import ProductsPage from './ProductsPage';
+import SelectedProduct from './SelectedProduct';
+import CartItemsPage from './CartItemsPage';
 
 export default function App() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([])
+  const [cartItems, setCartItems] = useState([])
 
-  const mainComponents = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  return <>
-    <Header></Header>
+  useEffect(() => {
+    fetch("/ecommerce/api/products.json").then(res => res.json()).then(data => setProducts(data))
+    fetch("/ecommerce/api/categories.json").then(res => res.json()).then(data => setCategories(data))
+  }, []);
 
-    <div className="grid grid-cols-5">
-      {mainComponents.map((item, index) => (
-        // Render Main component for each item in the array
-        <Main key={index} />
-      ))}
-    </div>
+  return (
+    <>
+      <BrowserRouter>
+        <Header />  
+        <Routes>
+          <Route path='/ecommerce' element={<ProductsPage products={products} />} />
+          <Route path='/ecommerce/:id' element={<SelectedProduct setCartItems={setCartItems} cartItems={cartItems} />} />
+          <Route path='/ecommerce/cartitems' element={<CartItemsPage cartItems={cartItems} />} />
+        </Routes>
 
-  </>
+      </BrowserRouter>
 
-
+    </>
+  );
 }
