@@ -2,23 +2,15 @@ import React, { useState } from 'react';
 import Product from "./components/Product/Product";
 
 function ProductsPage({ products, setCartItems }) {
-    // Set the number of products per page
     const productsPerPage = 10;
-
-    // Set up the current page state
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Calculate the index of the first and last product on the current page
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
-    // Get the products for the current page
     const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-    // Calculate the total number of pages
     const totalPages = Math.ceil(products.length / productsPerPage);
 
-    // Function to change the page
     const changePage = (pageNumber) => {
         if (pageNumber < 1) {
             setCurrentPage(1);
@@ -29,26 +21,26 @@ function ProductsPage({ products, setCartItems }) {
         }
     };
 
-    // Generate page numbers
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
     }
 
     return (
-        <div>
-            <div className="grid grid-cols-5">
+        <div className="container mx-auto px-4 py-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {currentProducts.map((product) => (
                     <Product setCartItems={setCartItems} key={product.id} product={product} />
-                ))} 
+                ))}
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center items-center space-x-2 mt-8">
                 <button
                     onClick={() => changePage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 bg-gray-300 rounded">
+                    className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300"
+                >
                     Previous
                 </button>
 
@@ -57,7 +49,7 @@ function ProductsPage({ products, setCartItems }) {
                     <button
                         key={pageNumber}
                         onClick={() => changePage(pageNumber)}
-                        className={`px-4 py-2 mx-1 rounded ${currentPage === pageNumber ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                        className={`px-4 py-2 rounded-md text-sm font-semibold ${currentPage === pageNumber ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'} transition duration-300`}
                     >
                         {pageNumber}
                     </button>
@@ -66,11 +58,12 @@ function ProductsPage({ products, setCartItems }) {
                 <button
                     onClick={() => changePage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-4 py-2 bg-gray-300 rounded">
+                    className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300"
+                >
                     Next
                 </button>
             </div>
-        </div >
+        </div>
     );
 }
 
